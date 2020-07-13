@@ -1,0 +1,40 @@
+﻿{
+    "TestScriptableObjects" : [
+        {
+            "Name" : "test1",
+            "IntValue" : 1,
+            "StringValue" : "hello",
+            "FloatValues" : [1.1, 1.2, 0.13],
+            "SubObject" : {
+                "Name" : "test1Sub",
+                "StrValue" : "helloSub"
+            }
+        
+        }
+    ],
+    "TestPrefabs":[
+        {
+            "Name" : "test2Sub",
+             "IntValue" : 2,
+             "StringValue" : "hello2",
+             "FloatValues" : [1.1, 1.2, 0.13],
+             "Collider" : {
+                "centerX" : 0,
+                "centerY" : 1,
+                "centerZ" : 0,
+                "extentX" : 0.5,
+                "extentY" : 2,
+                "extentZ" : 0.5
+             },
+             "SubComponent" : {
+                "Name" : "test2Sub",
+                "IntValue" : 3,
+                "StringValue" : "hello2Sub",
+                "DataSet" : {
+                     "BoolVal" : true,
+                     "StrVal" : "hello2SubSub"
+                }
+             }
+        }
+    ]
+}

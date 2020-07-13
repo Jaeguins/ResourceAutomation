@@ -12,8 +12,6 @@ namespace ProcedureParsing.Commands {
                     return ReactionOfCreate;
                 case CommandType.Move:
                     return ReactionOfMove;
-                case CommandType.Delete:
-                    return ReactionOfDelete;
                 case CommandType.Set:
                     return ReactionOfSet;
                 default:
@@ -26,8 +24,6 @@ namespace ProcedureParsing.Commands {
                     return ValidateOfCreate;
                 case CommandType.Move:
                     return ValidateOfMove;
-                case CommandType.Delete:
-                    return ValidateOfDelete;
                 case CommandType.Set:
                     return ValidateOfSet;
                 default:
@@ -41,8 +37,6 @@ namespace ProcedureParsing.Commands {
                     return 1;
                 case CommandType.Move:
                     return 0;
-                case CommandType.Delete:
-                    return 3;
                 case CommandType.Set:
                     return 2;
                 default:

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using ProcedureParsing;
 using ProcedureParsing.Commands;
-using TestObjects;
+using ProcedureParsing.Containers;
+using TestObjects.TestObjects;
 
-namespace ProcedureParsing.Containers {
+namespace TestObjects.TestContainer {
 
     [Serializable]
     public class TestSubScriptableObjectContainer : ContainerFactory {

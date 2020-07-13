@@ -7,6 +7,7 @@ using UnityEngine;
 namespace ProcedureParsing {
 
     public class ProcedureParser {
+
         private ProcedureLogger _logger;
         private List<Command> _commands;
         public List<Command> Command=>_commands;
@@ -32,7 +33,7 @@ namespace ProcedureParsing {
         private void Validate() {
             List<Command> validated = new List<Command>();
             foreach (Command com in _commands) {
-                Command[] resultBuffer = CommandProcessor.GetValidation(com.Type)(com.Target, com.SubTarget);
+                IEnumerable<Command> resultBuffer = CommandProcessor.GetValidation(com.Type)(this,com.Target, com.SubTarget);
                 if (resultBuffer == null) {
                     validated.Add(com);
                 } else {
@@ -53,14 +54,36 @@ namespace ProcedureParsing {
             }
             _logger.Reopen($"Procedure_{System.DateTime.Now:yyyy-MM-dd-HH-mm-ss}.log");
 
-            foreach (Command com in _commands) {
-                Command[] resultBuffer = CommandProcessor.GetReaction(com.Type)(com.Target, com.SubTarget);
-                if (resultBuffer.Length > 0 && resultBuffer[0].Type == CommandType.Log) {
+            for (int index = 0; index < _commands.Count; index++) {
+                Command com = _commands[index];
+                List<Command> resultBuffer =
+                    new List<Command>(CommandProcessor.GetReaction(com.Type)(this,com.Target, com.SubTarget));
+                if (resultBuffer != null && resultBuffer.Count > 0 && resultBuffer[0].Type == CommandType.Log) {
                     Debug.Log(resultBuffer[0].Target);
                     _logger.WriteLog(resultBuffer[0].Target);
                 }
             }
+
             _logger.Close();
+        }
+
+        public void ChangeAllCommandPath(string oldVal, string newVal) {
+            for (int index = 0; index < _commands.Count; index++) {
+                Command temp = _commands[index];
+                temp.Target=temp.Target.Replace(oldVal,newVal);
+                temp.SubTarget = temp.SubTarget.Replace(oldVal, newVal);
+                _commands[index] = temp;
+            }
+        }
+
+        public bool WillBeCreated(CustomPath Path) {
+            foreach (Command t in _commands) {
+                if (t.Type == CommandType.Create && t.SubTarget == Path.FullPath) {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 

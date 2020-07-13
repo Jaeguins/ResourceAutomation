@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using ProcedureParsing;
 using ProcedureParsing.Commands;
-using TestObjects;
+using ProcedureParsing.Containers;
+using TestObjects.TestObjects;
+using UnityEngine;
 
-namespace ProcedureParsing.Containers {
+namespace TestObjects.TestContainer {
 
     [Serializable]
     public class TestComponentContainer : ContainerFactory {
@@ -19,6 +22,7 @@ namespace ProcedureParsing.Containers {
         public const string IdExtentY="r_col_extentY";
         public const string IdExtentZ="r_col_extentZ";
         public const string IdSubComponent = "r_SubComponent";
+        public const string IdComponent = "c_TestComponent";
 
 
 
@@ -33,7 +37,8 @@ namespace ProcedureParsing.Containers {
         public override IEnumerable<Command> GenerateCommand(CustomPath path) {
             List<Command> ret=new List<Command>();
             CustomPath refPath = path.GenerateLowerPath(Name + _extension);
-
+            ret.Add(new Command(CommandType.Create,nameof(GameObject),refPath.FullPath));
+            refPath = refPath.GenerateLowerPath(IdComponent);
             ret.Add(new Command(CommandType.Create,nameof(TestComponent),refPath.FullPath));
 
             ret.Add(new Command(CommandType.Set,refPath.GenerateLowerPath(IdStringValue).FullPath,StringValue));

@@ -1,4 +1,6 @@
-﻿namespace ProcedureParsing.Commands {
+﻿using System.Collections.Generic;
+
+namespace ProcedureParsing.Commands {
 
     public struct Command {
         public CommandType Type;
@@ -16,7 +18,7 @@
         }
     }
 
-    public delegate Command[] CommandProcess(string target, string subTarget);
+    public delegate IEnumerable<Command> CommandProcess(ProcedureParser context, string target, string subTarget);
 
     
 }

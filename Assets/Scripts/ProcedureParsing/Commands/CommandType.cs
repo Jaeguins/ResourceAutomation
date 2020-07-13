@@ -14,10 +14,6 @@
         /// </summary>
         Move = 2,
         /// <summary>
-        /// deleting asset at target
-        /// </summary>
-        Delete = 3,
-        /// <summary>
         /// set value of target to sub-target
         /// </summary>
         Set = 4

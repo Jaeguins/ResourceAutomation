@@ -13,7 +13,7 @@ namespace TestObjects.TestContainer {
         public const string IdIntValue = "r_IntValue";
         public const string IdStringValue= "r_StringValue";
         public const string IdFloatValuesLength = "r_FloatValues_L";
-        public const string IdFloatValues= "r_FloatValues";
+        public const string IdFloatValues= "r_FloatValues_V";
         public const string IdSubObject= "r_SubObject";
 
 

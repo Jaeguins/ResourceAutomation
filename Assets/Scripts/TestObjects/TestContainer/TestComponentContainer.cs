@@ -14,7 +14,7 @@ namespace TestObjects.TestContainer {
         public const string IdStringValue="r_StringValue";
         public const string IdIntValue="r_IntValue";
         public const string IdFloatValuesLength="r_FloatValues_L";
-        public const string IdFloatValues="r_FloatValues";
+        public const string IdFloatValues="r_FloatValues_V";
         public const string IdColCenterX="r_col_centerX";
         public const string IdColCenterY="r_col_centerY";
         public const string IdColCenterZ="r_col_centerZ";
@@ -37,27 +37,25 @@ namespace TestObjects.TestContainer {
         public override IEnumerable<Command> GenerateCommand(CustomPath path) {
             List<Command> ret=new List<Command>();
             CustomPath refPath = path.GenerateLowerPath(Name + _extension);
-            ret.Add(new Command(CommandType.Create,nameof(GameObject),refPath.FullPath));
-            refPath = refPath.GenerateLowerPath(IdComponent);
-            ret.Add(new Command(CommandType.Create,nameof(TestComponent),refPath.FullPath));
+            CustomPath compPath= refPath.GenerateLowerPath(IdComponent);
+            ret.Add(new Command(CommandType.Create,nameof(TestComponent),compPath.FullPath));
 
-            ret.Add(new Command(CommandType.Set,refPath.GenerateLowerPath(IdStringValue).FullPath,StringValue));
+            ret.Add(new Command(CommandType.Set,compPath.GenerateLowerPath(IdStringValue).FullPath,StringValue));
             
-            ret.Add(new Command(CommandType.Set,refPath.GenerateLowerPath(IdIntValue).FullPath,IntValue.ToString()));
-            ret.Add(new Command(CommandType.Set,refPath.GenerateLowerPath(IdFloatValuesLength).FullPath,FloatValues.Count.ToString()));
+            ret.Add(new Command(CommandType.Set,compPath.GenerateLowerPath(IdIntValue).FullPath,IntValue.ToString()));
+            ret.Add(new Command(CommandType.Set,compPath.GenerateLowerPath(IdFloatValuesLength).FullPath,FloatValues.Count.ToString()));
             for (int i = 0; i < FloatValues.Count; i++) {
-                ret.Add(new Command(CommandType.Set,refPath.GenerateLowerPath($"{IdFloatValues}/{i}").FullPath,StringValue));
+                ret.Add(new Command(CommandType.Set,compPath.GenerateLowerPath($"{IdFloatValues}/{i}").FullPath,FloatValues[i].ToString()));
             }
 
-            ret.Add(new Command(CommandType.Set,refPath.GenerateLowerPath(IdColCenterX).FullPath,Collider.centerX.ToString()));
-            ret.Add(new Command(CommandType.Set,refPath.GenerateLowerPath(IdColCenterY).FullPath,Collider.centerY.ToString()));
-            ret.Add(new Command(CommandType.Set,refPath.GenerateLowerPath(IdColCenterZ).FullPath,Collider.centerZ.ToString()));
-            ret.Add(new Command(CommandType.Set,refPath.GenerateLowerPath(IdExtentX).FullPath,Collider.extentX.ToString()));
-            ret.Add(new Command(CommandType.Set,refPath.GenerateLowerPath(IdExtentY).FullPath,Collider.extentY.ToString()));
-            ret.Add(new Command(CommandType.Set,refPath.GenerateLowerPath(IdExtentZ).FullPath,Collider.extentZ.ToString()));
+            ret.Add(new Command(CommandType.Set,compPath.GenerateLowerPath(IdColCenterX).FullPath,Collider.centerX.ToString()));
+            ret.Add(new Command(CommandType.Set,compPath.GenerateLowerPath(IdColCenterY).FullPath,Collider.centerY.ToString()));
+            ret.Add(new Command(CommandType.Set,compPath.GenerateLowerPath(IdColCenterZ).FullPath,Collider.centerZ.ToString()));
+            ret.Add(new Command(CommandType.Set,compPath.GenerateLowerPath(IdExtentX).FullPath,Collider.extentX.ToString()));
+            ret.Add(new Command(CommandType.Set,compPath.GenerateLowerPath(IdExtentY).FullPath,Collider.extentY.ToString()));
+            ret.Add(new Command(CommandType.Set,compPath.GenerateLowerPath(IdExtentZ).FullPath,Collider.extentZ.ToString()));
 
             ret.AddRange(SubComponent.GenerateCommand(refPath));
-            ret.Add(new Command(CommandType.Set,refPath.GenerateLowerPath(IdSubComponent).FullPath,SubComponent.GetReferencePath(refPath).FullPath));
 
 
             return ret;

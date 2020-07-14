@@ -2,13 +2,14 @@
 using System.IO;
 using ProcedureParsing.Commands;
 using TestObjects.TestContainer;
+using UnityEditor;
 using UnityEngine;
 
 namespace TestObjects.TestObjects {
     public class TestComponent : MonoBehaviour, IProcedureParsable {
         public int IntValue;
         public string StringValue;
-        public List<float> FloatValues;
+        public List<float> FloatValues=new List<float>();
         public BoxCollider Collider;
         public TestSubComponent SubComponent;
 
@@ -66,20 +67,49 @@ namespace TestObjects.TestObjects {
                     FloatValues.AddRange(con);
                     break;
                 case TestComponentContainer.IdFloatValues:
-                    FloatValues[int.Parse(parsed[1])] = int.Parse(value);
+                    int index = int.Parse(parsed[1]);
+                    if(index<FloatValues.Count)
+                        FloatValues[index] = float.Parse(value);
                     break;
                 default:
-                    throw new InvalidDataException();
+                    throw new InvalidDataException(location);
             }
         }
 
         public string Get(string location) {
-            switch (location) {
+            string[] parsed = location.Split('/');
+            switch (parsed[0]) {
+                case TestComponentContainer.IdColCenterX:
+                    return Collider.center.x.ToString();
+                case TestComponentContainer.IdColCenterY:
+                    return Collider.center.y.ToString();
+                case TestComponentContainer.IdColCenterZ:
+                    return Collider.center.z.ToString();
+                    
+                case TestComponentContainer.IdExtentX:
+                    return (Collider.size.x/2).ToString();
+                case TestComponentContainer.IdExtentY:
+                    return (Collider.size.y/2).ToString();
+                case TestComponentContainer.IdExtentZ:
+                    return (Collider.size.z/2).ToString();
+                case TestComponentContainer.IdStringValue:
+                    return StringValue;
+                case TestComponentContainer.IdIntValue:
+                    return IntValue.ToString();
+                case TestComponentContainer.IdFloatValuesLength:
+                    return FloatValues.Count.ToString();
+                case TestComponentContainer.IdFloatValues:
+                    return FloatValues[int.Parse(parsed[1])].ToString();
                 default:
-                    throw new InvalidDataException();
+                    throw new InvalidDataException(location);
             }
         }
 
-        public void Initialize() { }
+        public void InitializeAsset() {
+            Collider = gameObject.AddComponent<BoxCollider>();
+            TestSubComponent sub=new GameObject("SubObject").AddComponent<TestSubComponent>();
+            sub.transform.parent = transform;
+            SubComponent = sub;
+        }
     }
 }

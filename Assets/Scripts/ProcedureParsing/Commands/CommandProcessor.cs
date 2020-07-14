@@ -39,6 +39,8 @@ namespace ProcedureParsing.Commands {
                     return 0;
                 case CommandType.Set:
                     return 2;
+                case CommandType.Log:
+                    return -1;
                 default:
                     throw new InvalidEnumArgumentException(nameof(type), (int) type, typeof(CommandType));
             }

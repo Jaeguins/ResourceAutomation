@@ -7,7 +7,7 @@ namespace ProcedureParsing.Containers {
 
     [Serializable]
     public class JsonContainer : ContainerFactory { //Root Json Parsed Target
-        private const string _basePath = "Asset/Resources/TestContainerDirectory";
+        private const string _basePath = "Assets/Resources/TestContainerDirectory";
 
         public List<TestScriptableObjectContainer> TestScriptableObjects;
         public List<TestComponentContainer> TestPrefabs;

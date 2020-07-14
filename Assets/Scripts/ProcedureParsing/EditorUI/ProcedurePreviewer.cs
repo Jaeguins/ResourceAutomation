@@ -14,6 +14,9 @@ namespace ProcedureParsing.EditorUI {
             if (GUILayout.Button("Preview")) {
                 _parser.Import(temp.text);
             }
+            if (GUILayout.Button("Apply")) {
+                _parser.Apply();
+            }
             scrollPos=EditorGUILayout.BeginScrollView(scrollPos);
             if (_parser.Command != null) {
                 rawCommandShow = EditorGUILayout.Foldout(rawCommandShow, "RawCommands");

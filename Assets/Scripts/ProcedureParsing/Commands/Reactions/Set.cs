@@ -13,12 +13,14 @@ namespace ProcedureParsing.Commands {
             CustomPath path = new CustomPath(target);
             IProcedureParsable tempTarget=CustomPath.FindAssetWithPath(path);
             if (tempTarget == null) {
-                ret.Add(new Command(CommandType.Log, "CannotFoundTarget"));
+                ret.Add(new Command(CommandType.Log, "CannotFoundTarget",$"Set {target} into {subTarget}"));
                 return ret;
             }
 
             if (path.FromLast(1).StartsWith("r_")) {
                 tempTarget.Set($"{path.FromLast(1)}/{path.FromLast(0)}",subTarget);
+            } else {
+                tempTarget.Set(path.FromLast(0),subTarget);
             }
             return null;
         }
@@ -28,18 +30,24 @@ namespace ProcedureParsing.Commands {
             CustomPath path = new CustomPath(target);
             IProcedureParsable tempTarget=CustomPath.FindAssetWithPath(path);
             if (tempTarget == null) {
-                if (context.WillBeCreated(path.GenerateHigherPath(1))) {
-                    Debug.Log($"{path} will be create");
+                if (context.WillBeCreated(new CustomPath(path.FilePath))) {
                     return null;
                 }
-                ret.Add(new Command(CommandType.Log, "CannotFoundTarget"));
+                ret.Add(new Command(CommandType.Log, "CannotFoundTarget",$"Set {target} into {subTarget}"));
                 return ret;
             }
-
-            if (tempTarget.Get(path.FromLast(0)) == subTarget) {
-                return ret;
+            if (path.FromLast(1).StartsWith("r_")) {
+                if (tempTarget.Get($"{path.FromLast(1)}/{path.FromLast(0)}") == subTarget) {
+                    return ret;
+                }
+                return null;
+            } else {
+                if(tempTarget.Get(path.FromLast(0))==subTarget)
+                {
+                    return ret;
+                }
+                return null;
             }
-            else return null;
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using ProcedureParsing.Commands;
+using TestObjects.TestContainer;
 using UnityEngine;
 
 namespace TestObjects.TestObjects {
@@ -8,19 +9,26 @@ namespace TestObjects.TestObjects {
         public string StrValue;
 
         public void Set(string location, string value) {
-            switch (location) {
+            string[] parsed = location.Split('/');
+            switch (parsed[0]) {
+                case TestSubScriptableObjectContainer.IdStrValue:
+                    StrValue = value;
+                    break;
                 default:
                     throw new InvalidDataException();
             }
         }
 
         public string Get(string location) {
-            switch (location) {
+            string[] parsed = location.Split('/');
+            switch (parsed[0]) {
+                case TestSubScriptableObjectContainer.IdStrValue:
+                    return StrValue;
                 default:
                     throw new InvalidDataException();
             }
         }
 
-        public void Initialize() { }
+        public void InitializeAsset() { }
     }
 }

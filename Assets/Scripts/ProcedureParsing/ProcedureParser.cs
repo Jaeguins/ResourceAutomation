@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ProcedureParsing.Commands;
 using ProcedureParsing.Containers;
 using ProcedureParsing.Logger;
@@ -7,10 +8,9 @@ using UnityEngine;
 namespace ProcedureParsing {
 
     public class ProcedureParser {
-
         private ProcedureLogger _logger;
         private List<Command> _commands;
-        public List<Command> Command=>_commands;
+        public List<Command> Command => _commands;
         public ProcedureParser() {
             _logger = new ProcedureLogger();
         }
@@ -25,15 +25,16 @@ namespace ProcedureParsing {
         }
         private void Parse(string json) {
             _commands = new List<Command>();
-            JsonContainer container=JsonUtility.FromJson<JsonContainer>(json);
+            JsonContainer container = JsonUtility.FromJson<JsonContainer>(json);
             _commands.AddRange(container.GenerateCommand(null));
             Sort();
         }
 
         private void Validate() {
             List<Command> validated = new List<Command>();
-            foreach (Command com in _commands) {
-                IEnumerable<Command> resultBuffer = CommandProcessor.GetValidation(com.Type)(this,com.Target, com.SubTarget);
+            for (int index = 0; index < _commands.Count; index++) {
+                Command com = _commands[index];
+                IEnumerable<Command> resultBuffer = CommandProcessor.GetValidation(com.Type)(this, com.Target, com.SubTarget);
                 if (resultBuffer == null) {
                     validated.Add(com);
                 } else {
@@ -42,6 +43,7 @@ namespace ProcedureParsing {
                     }
                 }
             }
+            _commands = validated;
             Sort();
         }
         public void Reset() {
@@ -56,9 +58,10 @@ namespace ProcedureParsing {
 
             for (int index = 0; index < _commands.Count; index++) {
                 Command com = _commands[index];
-                List<Command> resultBuffer =
-                    new List<Command>(CommandProcessor.GetReaction(com.Type)(this,com.Target, com.SubTarget));
-                if (resultBuffer != null && resultBuffer.Count > 0 && resultBuffer[0].Type == CommandType.Log) {
+                List<Command> resultBuffer = new List<Command>();
+                IEnumerable<Command> reactions = CommandProcessor.GetReaction(com.Type)(this, com.Target, com.SubTarget);
+                if (reactions != null) resultBuffer.AddRange(reactions);
+                if (resultBuffer.Count > 0 && resultBuffer[0].Type == CommandType.Log) {
                     Debug.Log(resultBuffer[0].Target);
                     _logger.WriteLog(resultBuffer[0].Target);
                 }
@@ -70,7 +73,7 @@ namespace ProcedureParsing {
         public void ChangeAllCommandPath(string oldVal, string newVal) {
             for (int index = 0; index < _commands.Count; index++) {
                 Command temp = _commands[index];
-                temp.Target=temp.Target.Replace(oldVal,newVal);
+                temp.Target = temp.Target.Replace(oldVal, newVal);
                 temp.SubTarget = temp.SubTarget.Replace(oldVal, newVal);
                 _commands[index] = temp;
             }
@@ -78,7 +81,7 @@ namespace ProcedureParsing {
 
         public bool WillBeCreated(CustomPath Path) {
             foreach (Command t in _commands) {
-                if (t.Type == CommandType.Create && t.SubTarget == Path.FullPath) {
+                if (t.Type == CommandType.Create && t.SubTarget.Contains(Path.FullPath)) {
                     return true;
                 }
             }

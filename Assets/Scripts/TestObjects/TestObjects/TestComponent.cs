@@ -2,7 +2,6 @@
 using System.IO;
 using ProcedureParsing.Commands;
 using TestObjects.TestContainer;
-using UnityEditor;
 using UnityEngine;
 
 namespace TestObjects.TestObjects {
@@ -99,7 +98,15 @@ namespace TestObjects.TestObjects {
                 case TestComponentContainer.IdFloatValuesLength:
                     return FloatValues.Count.ToString();
                 case TestComponentContainer.IdFloatValues:
-                    return FloatValues[int.Parse(parsed[1])].ToString();
+                {
+                    int index = int.Parse(parsed[1]);
+                    if (FloatValues.Count > index) {
+                        return FloatValues[index].ToString();
+                    }
+                    return float.MaxValue.ToString();
+                }
+                    
+                    
                 default:
                     throw new InvalidDataException(location);
             }

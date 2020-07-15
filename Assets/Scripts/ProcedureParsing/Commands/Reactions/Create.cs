@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using TestObjects;
 using TestObjects.TestObjects;
 using UnityEditor;
 using UnityEngine;
@@ -11,21 +10,21 @@ namespace ProcedureParsing.Commands {
         private static IEnumerable<Command> ReactionOfCreate(ProcedureParser context, string target, string subTarget) {
             List<Command> ret = new List<Command>();
             IProcedureParsable targetAsset = CreateNewObject(target);
-            CustomPath targetPath=new CustomPath(subTarget);
-            CustomPath assetPath=null;
+            CustomPath targetPath = new CustomPath(subTarget);
+            CustomPath assetPath = null;
             {
                 int altIndex = 0;
                 for (; altIndex < targetPath.Length; altIndex++) {
-                    if (targetPath.FromLast(altIndex).Contains(".")) {
+                    if (targetPath.FromLast(altIndex).Contains(CustomPath.ExtensionDiff)) {
                         break;
                     }
                 }
-                assetPath=targetPath.GenerateHigherPath(altIndex);
+                assetPath = targetPath.GenerateHigherPath(altIndex);
             }
             Debug.LogWarning(assetPath?.FullPath);
 
-            CustomPath tempPath=new CustomPath(Empty);
-            for (int i = 0; i < assetPath.Length-1; i++) {
+            CustomPath tempPath = new CustomPath(Empty);
+            for (int i = 0; i < assetPath.Length - 1; i++) {
                 tempPath = tempPath.GenerateLowerPath(assetPath[i]);
                 if (!AssetDatabase.IsValidFolder(tempPath.FullPath)) {
                     Debug.Log($"{tempPath} creating directory");
@@ -36,11 +35,9 @@ namespace ProcedureParsing.Commands {
                 AssetDatabase.CreateAsset(targetAsset as ScriptableObject, assetPath.FullPath);
                 targetAsset.InitializeAsset();
             } else if (targetAsset is Component) {
-                
                 targetAsset.InitializeAsset();
                 PrefabUtility.SaveAsPrefabAsset((targetAsset as Component).gameObject, assetPath.FullPath);
                 Object.DestroyImmediate((targetAsset as Component).gameObject);
-                
             } else {
                 ret.Add(new Command(CommandType.Log, "Invalid Type"));
                 return ret;
@@ -60,7 +57,7 @@ namespace ProcedureParsing.Commands {
                 List<string> tempTargets = CustomPath.FindAssetOnlyName(path);
                 if (tempTargets.Count > 2) {
                     Debug.Log($"{path} : have more than one.");
-                    ret.Add(new Command(CommandType.Log, $"{path} : have more than one.",$"Create {target} in {subTarget}"));
+                    ret.Add(new Command(CommandType.Log, $"{path} : have more than one.", $"Create {target} in {subTarget}"));
                     return ret;
                 } else if (tempTargets.Count == 0) {
                     return null;

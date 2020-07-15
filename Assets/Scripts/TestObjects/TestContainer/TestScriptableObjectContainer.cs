@@ -16,18 +16,13 @@ namespace TestObjects.TestContainer {
         public const string IdFloatValues= "r_FloatValues_V";
         public const string IdSubObject= "r_SubObject";
 
-
-
-
-
-        private const string _extension = ".asset";
         public TestSubScriptableObjectContainer SubObject;
         public string Name;
         public int IntValue;
         public string StringValue;
         public List<float> FloatValues;
         public override CustomPath GetReferencePath(CustomPath path) {
-            return path.GenerateLowerPath(Name + _extension);
+            return path.GenerateLowerPath(Name + CustomPath.AssetExtension);
         }
         public override IEnumerable<Command> GenerateCommand(CustomPath path) {
             List<Command> ret = new List<Command>();

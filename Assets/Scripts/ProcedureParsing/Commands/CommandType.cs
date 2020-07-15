@@ -2,7 +2,7 @@
 
     public enum CommandType {
         /// <summary>
-        /// Internal temporal type for logging
+        /// Internal temporal type for logging, message is target
         /// </summary>
         Log = 0,
         /// <summary>

@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b7cf7b5158cbc54690ee688554d7f0c, type: 3}
   m_Name: test1Sub
   m_EditorClassIdentifier: 
-  StrValue: 
+  StrValue: helloSub

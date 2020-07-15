@@ -9,7 +9,6 @@ namespace TestObjects.TestContainer {
 
     [Serializable]
     public class TestSubScriptableObjectContainer : ContainerFactory {
-        private const string _extension = ".asset";
         public const string IdStrValue = "r_StrValue";
         public string Name,
                       StrValue;
@@ -21,7 +20,7 @@ namespace TestObjects.TestContainer {
             return ret;
         }
         public override CustomPath GetReferencePath(CustomPath path) {
-            return path.GenerateLowerPath(Name + _extension);
+            return path.GenerateLowerPath(Name + CustomPath.AssetExtension);
         }
     }
 

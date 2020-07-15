@@ -1,6 +1,4 @@
 ﻿using System;
-using System.IO;
-using ProcedureParsing.Commands;
 
 namespace TestObjects.TestObjects {
     [Serializable]

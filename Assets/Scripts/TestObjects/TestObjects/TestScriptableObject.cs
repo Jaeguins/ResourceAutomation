@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using ProcedureParsing;
 using ProcedureParsing.Commands;
 using TestObjects.TestContainer;
 using UnityEngine;
-using static System.Int32;
-using static System.Single;
 
 namespace TestObjects.TestObjects {
 

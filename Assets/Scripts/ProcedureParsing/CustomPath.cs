@@ -4,15 +4,17 @@ using System.Linq;
 using ProcedureParsing.Commands;
 using UnityEditor;
 using UnityEngine;
-using Object = System.Object;
 
 namespace ProcedureParsing {
 
     public class CustomPath {
-        private const char _diff = '/';
+        public const char PathDiff = '/';
         public const string ObjPrefix = "o_",
                             CompPrefix = "c_",
-                            RefPrefix = "r_";
+                            RefPrefix = "r_",
+                            ExtensionDiff = ".";
+        public const string PrefabExtension = ".prefab";
+        public const string AssetExtension = ".asset";
         public string FullPath;
         
         public string this[int index] => _pathParts[index];
@@ -25,14 +27,14 @@ namespace ProcedureParsing {
             _filePath = string.Empty;
             for (int index = 0; index < Length; index++) {
                 string t = this[index];
-                if (t.Contains(".")) {
-                    _filePath+= $"/{t}";
+                if (t.Contains(ExtensionDiff)) {
+                    _filePath+= $"{PathDiff}{t}";
                     _fileName = t;
                     _fileNameIndex = index;
                     break;
                 }
 
-                _filePath += $"/{t}";
+                _filePath += $"{PathDiff}{t}";
             }
             _filePath=_filePath.Substring(1);
             _lastPathForFilePath = FullPath;
@@ -72,7 +74,7 @@ namespace ProcedureParsing {
         private string[] _pathParts {
             get {
                 if (_lastPathForPathPart != FullPath) {
-                    _lastParts = FullPath.Split(_diff);
+                    _lastParts = FullPath.Split(PathDiff);
                     _lastPathForPathPart = FullPath;
                 }
                 return _lastParts;
@@ -83,20 +85,27 @@ namespace ProcedureParsing {
             return FullPath;
         }
 
-        //Example : Assets/Resources/Commons/Furnitures/1st/FirstDiorama/FurnitureName/AllocPrefab.prefab/o_Grids/o_FirstRoomGrid/c_RoomGrid/r_size/r_x
-        //Example : Assets/Resources/Commons/Furnitures/1st/FirstDiorama/FurnitureName/ScriptableData.asset/r_size/r_x
+        //Example(Prefab) :
+        //Assets/Resources/Commons/Furnitures/1st/FirstDiorama/FurnitureName/AllocPrefab.prefab/o_Grids/o_FirstRoomGrid/c_RoomGrid/r_size/r_x
+        //Example(ScriptableObject) :
+        //Assets/Resources/Commons/Furnitures/1st/FirstDiorama/FurnitureName/ScriptableData.asset/r_size/r_x
         public CustomPath(string fullPath) {
             FullPath = fullPath;
-            if (FullPath.StartsWith("/")) {
+            if (FullPath.StartsWith($"{PathDiff}")) {
                 FullPath=FullPath.Substring(1);
             }
         }
         public CustomPath GenerateHigherPath(int altIndex) {
-            string targetPath = _pathParts[_pathParts.Length - altIndex - 1];
-            return new CustomPath(FullPath.Substring(0, FullPath.IndexOf(targetPath, StringComparison.Ordinal) + targetPath.Length));
+            int targetIndex = _pathParts.Length - altIndex - 1;
+            if (targetIndex < _pathParts.Length && targetIndex > 0) {
+                string targetPath = _pathParts[targetIndex];
+                return new CustomPath(FullPath.Substring(0, FullPath.IndexOf(targetPath, StringComparison.Ordinal) + targetPath.Length));
+            }
+            return new CustomPath("");
+            
         }
         public CustomPath GenerateLowerPath(string additional) {
-            return new CustomPath($"{FullPath}/{additional}");
+            return new CustomPath($"{FullPath}{PathDiff}{additional}");
         }
         public string FromLast(int index) {
             return _pathParts[_pathParts.Length - 1 - index];
@@ -104,7 +113,7 @@ namespace ProcedureParsing {
 
         public static List<string> FindAssetOnlyName(string path) => FindAssetOnlyName(new CustomPath(path));
         public static List<string> FindAssetOnlyName(CustomPath path) {
-            if (!UnityEngine.Application.isEditor) return null;
+            if (!Application.isEditor) return null;
             List<string> ret=new List<string>();
             string fileName = string.Empty;
             foreach (string t in path._pathParts) {
@@ -126,13 +135,13 @@ namespace ProcedureParsing {
             
             int tempIndex = path.FileNameIndex+1;
 
-            if (path.FileName.EndsWith(".prefab")) {
+            if (path.FileName.EndsWith(PrefabExtension)) {
                 GameObject targetGameObject = AssetDatabase.LoadAssetAtPath<GameObject>(path.FilePath);
                 if (targetGameObject == null) {
                     return null;
                 }
                 Transform targetObject = targetGameObject.transform;
-                while (path[tempIndex].Contains("o_")) {
+                while (path[tempIndex].Contains(ObjPrefix)) {
                     targetObject = targetObject.Find(path[tempIndex].Substring(2));
                     tempIndex++;
                 }
@@ -145,7 +154,7 @@ namespace ProcedureParsing {
 
                 return targetComponent;
             }
-            else if (path.FilePath.EndsWith(".asset")) {
+            else if (path.FilePath.EndsWith(AssetExtension)) {
                 IProcedureParsable targetScriptableObject =
                     AssetDatabase.LoadAssetAtPath<ScriptableObject>(path.FilePath) as IProcedureParsable;
                 if (targetScriptableObject == null) {
@@ -155,6 +164,7 @@ namespace ProcedureParsing {
             }
             return null;
         }
+
     }
 
 }

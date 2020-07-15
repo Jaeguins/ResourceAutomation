@@ -1,53 +1,62 @@
-﻿using System;
-using System.Collections.Generic;
-using UnityEditor;
-using UnityEngine;
-using Object = System.Object;
+﻿using System.Collections.Generic;
 
 namespace ProcedureParsing.Commands {
-    public static partial class CommandProcessor {
-        private static IEnumerable<Command> ReactionOfSet(ProcedureParser context,  string target,string subTarget) {
-            
 
+    public static partial class CommandProcessor {
+        private static IEnumerable<Command> ReactionOfSet(ProcedureParser context, string target, string subTarget) {
             List<Command> ret = new List<Command>();
             CustomPath path = new CustomPath(target);
-            IProcedureParsable tempTarget=CustomPath.FindAssetWithPath(path);
+            IProcedureParsable tempTarget = CustomPath.FindAssetWithPath(path);
             if (tempTarget == null) {
-                ret.Add(new Command(CommandType.Log, "CannotFoundTarget",$"Set {target} into {subTarget}"));
+                ret.Add(new Command(CommandType.Log, "CannotFoundTarget", $"Set {target} into {subTarget}"));
                 return ret;
             }
 
-            if (path.FromLast(1).StartsWith("r_")) {
-                tempTarget.Set($"{path.FromLast(1)}/{path.FromLast(0)}",subTarget);
+            if (path.FromLast(1).StartsWith(CustomPath.RefPrefix)) {
+                tempTarget.Set($"{path.FromLast(1)}/{path.FromLast(0)}", subTarget);
             } else {
-                tempTarget.Set(path.FromLast(0),subTarget);
+                tempTarget.Set(path.FromLast(0), subTarget);
             }
             return null;
         }
 
         private static IEnumerable<Command> ValidateOfSet(ProcedureParser context, string target, string subTarget) {
             List<Command> ret = new List<Command>();
+            ret.Add(new Command(CommandType.Set, target, subTarget));
             CustomPath path = new CustomPath(target);
-            IProcedureParsable tempTarget=CustomPath.FindAssetWithPath(path);
+            IProcedureParsable tempTarget = CustomPath.FindAssetWithPath(path);
             if (tempTarget == null) {
                 if (context.WillBeCreated(new CustomPath(path.FilePath))) {
-                    return null;
+                    Command buff = ret[0];
+                    buff.PastValue = Command.NaN;
+                    ret[0] = buff;
+                    return ret;
                 }
-                ret.Add(new Command(CommandType.Log, "CannotFoundTarget",$"Set {target} into {subTarget}"));
+                ret.Clear();
+                ret.Add(new Command(CommandType.Log, "CannotFoundTarget", $"Set {target} into {subTarget}"));
                 return ret;
             }
-            if (path.FromLast(1).StartsWith("r_")) {
-                if (tempTarget.Get($"{path.FromLast(1)}/{path.FromLast(0)}") == subTarget) {
-                    return ret;
+            if (path.FromLast(1).StartsWith(CustomPath.RefPrefix)) {
+                string tempValue = tempTarget.Get($"{path.FromLast(1)}/{path.FromLast(0)}");
+                if (tempValue == subTarget) {
+                    ret.Clear();
+                } else {
+                    Command buff = ret[0];
+                    buff.PastValue = tempValue;
+                    ret[0] = buff;
                 }
-                return null;
             } else {
-                if(tempTarget.Get(path.FromLast(0))==subTarget)
-                {
-                    return ret;
+                string tempValue = tempTarget.Get(path.FromLast(0));
+                if (tempValue == subTarget) {
+                    ret.Clear();
+                } else {
+                    Command buff = ret[0];
+                    buff.PastValue = tempValue;
+                    ret[0] = buff;
                 }
-                return null;
             }
+            return ret;
         }
     }
+
 }

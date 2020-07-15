@@ -4,7 +4,6 @@ using ProcedureParsing;
 using ProcedureParsing.Commands;
 using ProcedureParsing.Containers;
 using TestObjects.TestObjects;
-using UnityEngine;
 
 namespace TestObjects.TestContainer {
 
@@ -24,10 +23,6 @@ namespace TestObjects.TestContainer {
         public const string IdSubComponent = "r_SubComponent";
         public const string IdComponent = "c_TestComponent";
 
-
-
-
-        private const string _extension = ".prefab";
         public string Name,
                       StringValue;
         public List<float> FloatValues;
@@ -36,7 +31,7 @@ namespace TestObjects.TestContainer {
         public TestSubComponentContainer SubComponent;
         public override IEnumerable<Command> GenerateCommand(CustomPath path) {
             List<Command> ret=new List<Command>();
-            CustomPath refPath = path.GenerateLowerPath(Name + _extension);
+            CustomPath refPath = path.GenerateLowerPath(Name + CustomPath.PrefabExtension);
             CustomPath compPath= refPath.GenerateLowerPath(IdComponent);
             ret.Add(new Command(CommandType.Create,nameof(TestComponent),compPath.FullPath));
 
@@ -61,7 +56,7 @@ namespace TestObjects.TestContainer {
             return ret;
         }
         public override CustomPath GetReferencePath(CustomPath path) {
-            return path.GenerateLowerPath(Name+_extension);
+            return path.GenerateLowerPath(Name+ CustomPath.PrefabExtension);
         }
 
         

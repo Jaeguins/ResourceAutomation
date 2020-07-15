@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using ProcedureParsing;
 using ProcedureParsing.Commands;
-using TestObjects.TestContainer;
+using ProcedureParsing.Containers;
 
-namespace ProcedureParsing.Containers {
+namespace TestObjects.TestContainer {
 
     [Serializable]
     public class JsonContainer : JsonParsed { //Root Json Parsed Target

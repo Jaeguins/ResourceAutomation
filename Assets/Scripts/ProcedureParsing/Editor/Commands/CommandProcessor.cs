@@ -1,30 +1,22 @@
 ﻿using System;
-using System.ComponentModel;
+using System.Collections.Generic;
 
 namespace ProcedureParsing.Commands {
 
-    public static class CommandProcessor {
-        private static ICommand[] _commands = {null, new CreateCommand(), new MoveCommand(), null, new SetCommand()};
-        public static CommandProcess GetReaction(CommandType type) {
-            return _commands[(int) type].Reaction;
+    public class CommandProcessor {
+        private static Dictionary<string, ICommand> _commands;
+        public static void SetCommands(Dictionary<string, ICommand> map) {
+            _commands = map;
         }
-        public static CommandProcess GetValidation(CommandType type) {
-            return _commands[(int) type].Validation;
+        public static CommandProcess GetReaction(string type) {
+            return _commands[type].Reaction;
+        }
+        public static CommandProcess GetValidation(string type) {
+            return _commands[type].Validation;
         }
 
-        public static int GetPriority(CommandType type) {
-            switch (type) {
-                case CommandType.Create:
-                    return 1;
-                case CommandType.Move:
-                    return 0;
-                case CommandType.Set:
-                    return 2;
-                case CommandType.Log:
-                    return -1;
-                default:
-                    throw new InvalidEnumArgumentException(nameof(type), (int) type, typeof(CommandType));
-            }
+        public static int GetPriority(string type) {
+            return _commands[type].GetPriority;
         }
 
         public static int CompareCommand(Command x, Command y) { //positive when x is bigger

@@ -3,7 +3,7 @@ using UnityEditor;
 using UnityEngine;
 using static System.String;
 
-namespace ProcedureParsing.Commands {
+namespace ProcedureParsing.Commands.Reactions {
 
     public class CreateCommand:ICommand {
         private IEnumerable<Command> ReactionOfCreate(ProcedureParser context, string target, string subTarget) {
@@ -38,7 +38,7 @@ namespace ProcedureParsing.Commands {
                 PrefabUtility.SaveAsPrefabAsset((targetAsset as Component).gameObject, assetPath.FullPath);
                 Object.DestroyImmediate((targetAsset as Component).gameObject);
             } else {
-                ret.Add(new Command(CommandType.Log, "Invalid Type"));
+                ret.Add(new Command(DefaultCommandType.Log, "Invalid Type"));
                 return ret;
             }
 
@@ -56,12 +56,12 @@ namespace ProcedureParsing.Commands {
                 List<string> tempTargets = CustomPath.FindAssetOnlyName(path);
                 if (tempTargets.Count > 2) {
                     Debug.Log($"{path} : have more than one.");
-                    ret.Add(new Command(CommandType.Log, $"{path} : have more than one.", $"Create {target} in {subTarget}"));
+                    ret.Add(new Command(DefaultCommandType.Log, $"{path} : have more than one.", $"Create {target} in {subTarget}"));
                     return ret;
                 } else if (tempTargets.Count == 0) {
                     return null;
                 } else {
-                    ret.Add(new Command(CommandType.Move, tempTargets[0], subTarget));
+                    ret.Add(new Command(DefaultCommandType.Move, tempTargets[0], subTarget));
                     context.ChangeAllCommandPath(path.FilePath, tempTargets[0]);
                     return ret;
                 }
@@ -88,6 +88,7 @@ namespace ProcedureParsing.Commands {
         }
         public CommandProcess Reaction => ReactionOfCreate;
         public CommandProcess Validation => ValidateOfCreate;
+        public int GetPriority => 1;
     }
 
 }

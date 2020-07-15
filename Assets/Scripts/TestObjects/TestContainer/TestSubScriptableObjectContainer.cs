@@ -15,8 +15,8 @@ namespace TestObjects.TestContainer {
         public override IEnumerable<Command> GenerateCommand(CustomPath path) {
             List<Command> ret = new List<Command>();
             CustomPath objPath = GetReferencePath(path);
-            ret.Add(new Command(CommandType.Create,nameof(TestSubScriptableObject),objPath.FullPath));
-            ret.Add(new Command(CommandType.Set, objPath.GenerateLowerPath(IdStrValue).FullPath, StrValue));
+            ret.Add(new Command(DefaultCommandType.Create,nameof(TestSubScriptableObject),objPath.FullPath));
+            ret.Add(new Command(DefaultCommandType.Set, objPath.GenerateLowerPath(IdStrValue).FullPath, StrValue));
             return ret;
         }
         public override CustomPath GetReferencePath(CustomPath path) {

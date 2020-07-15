@@ -33,22 +33,22 @@ namespace TestObjects.TestContainer {
             List<Command> ret=new List<Command>();
             CustomPath refPath = path.GenerateLowerPath(Name + CustomPath.PrefabExtension);
             CustomPath compPath= refPath.GenerateLowerPath(IdComponent);
-            ret.Add(new Command(CommandType.Create,nameof(TestComponent),compPath.FullPath));
+            ret.Add(new Command(DefaultCommandType.Create,nameof(TestComponent),compPath.FullPath));
 
-            ret.Add(new Command(CommandType.Set,compPath.GenerateLowerPath(IdStringValue).FullPath,StringValue));
+            ret.Add(new Command(DefaultCommandType.Set,compPath.GenerateLowerPath(IdStringValue).FullPath,StringValue));
             
-            ret.Add(new Command(CommandType.Set,compPath.GenerateLowerPath(IdIntValue).FullPath,IntValue.ToString()));
-            ret.Add(new Command(CommandType.Set,compPath.GenerateLowerPath(IdFloatValuesLength).FullPath,FloatValues.Count.ToString()));
+            ret.Add(new Command(DefaultCommandType.Set,compPath.GenerateLowerPath(IdIntValue).FullPath,IntValue.ToString()));
+            ret.Add(new Command(DefaultCommandType.Set,compPath.GenerateLowerPath(IdFloatValuesLength).FullPath,FloatValues.Count.ToString()));
             for (int i = 0; i < FloatValues.Count; i++) {
-                ret.Add(new Command(CommandType.Set,compPath.GenerateLowerPath($"{IdFloatValues}/{i}").FullPath,FloatValues[i].ToString()));
+                ret.Add(new Command(DefaultCommandType.Set,compPath.GenerateLowerPath($"{IdFloatValues}/{i}").FullPath,FloatValues[i].ToString()));
             }
 
-            ret.Add(new Command(CommandType.Set,compPath.GenerateLowerPath(IdColCenterX).FullPath,Collider.centerX.ToString()));
-            ret.Add(new Command(CommandType.Set,compPath.GenerateLowerPath(IdColCenterY).FullPath,Collider.centerY.ToString()));
-            ret.Add(new Command(CommandType.Set,compPath.GenerateLowerPath(IdColCenterZ).FullPath,Collider.centerZ.ToString()));
-            ret.Add(new Command(CommandType.Set,compPath.GenerateLowerPath(IdExtentX).FullPath,Collider.extentX.ToString()));
-            ret.Add(new Command(CommandType.Set,compPath.GenerateLowerPath(IdExtentY).FullPath,Collider.extentY.ToString()));
-            ret.Add(new Command(CommandType.Set,compPath.GenerateLowerPath(IdExtentZ).FullPath,Collider.extentZ.ToString()));
+            ret.Add(new Command(DefaultCommandType.Set,compPath.GenerateLowerPath(IdColCenterX).FullPath,Collider.centerX.ToString()));
+            ret.Add(new Command(DefaultCommandType.Set,compPath.GenerateLowerPath(IdColCenterY).FullPath,Collider.centerY.ToString()));
+            ret.Add(new Command(DefaultCommandType.Set,compPath.GenerateLowerPath(IdColCenterZ).FullPath,Collider.centerZ.ToString()));
+            ret.Add(new Command(DefaultCommandType.Set,compPath.GenerateLowerPath(IdExtentX).FullPath,Collider.extentX.ToString()));
+            ret.Add(new Command(DefaultCommandType.Set,compPath.GenerateLowerPath(IdExtentY).FullPath,Collider.extentY.ToString()));
+            ret.Add(new Command(DefaultCommandType.Set,compPath.GenerateLowerPath(IdExtentZ).FullPath,Collider.extentZ.ToString()));
 
             ret.AddRange(SubComponent.GenerateCommand(refPath));
 

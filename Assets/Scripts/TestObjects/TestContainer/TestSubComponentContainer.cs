@@ -25,11 +25,11 @@ namespace TestObjects.TestContainer {
         public override IEnumerable<Command> GenerateCommand(CustomPath path) {
             List<Command> ret=new List<Command>();
             CustomPath refPath = GetReferencePath(path);
-            ret.Add(new Command(CommandType.Set,refPath.GenerateLowerPath(IdStringValue).FullPath,StringValue));
-            ret.Add(new Command(CommandType.Set,refPath.GenerateLowerPath(IdIntValue).FullPath,IntValue.ToString()));
+            ret.Add(new Command(DefaultCommandType.Set,refPath.GenerateLowerPath(IdStringValue).FullPath,StringValue));
+            ret.Add(new Command(DefaultCommandType.Set,refPath.GenerateLowerPath(IdIntValue).FullPath,IntValue.ToString()));
             
-            ret.Add(new Command(CommandType.Set,refPath.GenerateLowerPath(IdDataBool).FullPath,DataSet.BoolVal.ToString()));
-            ret.Add(new Command(CommandType.Set,refPath.GenerateLowerPath(IdDataStr).FullPath,DataSet.StrVal));
+            ret.Add(new Command(DefaultCommandType.Set,refPath.GenerateLowerPath(IdDataBool).FullPath,DataSet.BoolVal.ToString()));
+            ret.Add(new Command(DefaultCommandType.Set,refPath.GenerateLowerPath(IdDataStr).FullPath,DataSet.StrVal));
             return ret;
         }
         public override CustomPath GetReferencePath(CustomPath path) {

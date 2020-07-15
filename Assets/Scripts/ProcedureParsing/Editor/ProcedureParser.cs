@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using ProcedureParsing.Commands;
+using ProcedureParsing.Commands.Reactions;
 using ProcedureParsing.Containers;
 using ProcedureParsing.Logger;
 using UnityEngine;
@@ -12,6 +13,11 @@ namespace ProcedureParsing {
         public List<Command> Command => _commands;
         public ProcedureParser() {
             _logger = new ProcedureLogger();
+            Dictionary<string, ICommand> commandMap = new Dictionary<string, ICommand>();
+            commandMap.Add(DefaultCommandType.Log,new LogCommand());
+            commandMap.Add(DefaultCommandType.Create,new CreateCommand());
+            commandMap.Add(DefaultCommandType.Move,new MoveCommand());
+            commandMap.Add(DefaultCommandType.Set,new SetCommand());
         }
 
         public void Import(string json) {
@@ -60,7 +66,7 @@ namespace ProcedureParsing {
                 List<Command> resultBuffer = new List<Command>();
                 IEnumerable<Command> reactions = CommandProcessor.GetReaction(com.Type)(this, com.Target, com.SubTarget);
                 if (reactions != null) resultBuffer.AddRange(reactions);
-                if (resultBuffer.Count > 0 && resultBuffer[0].Type == CommandType.Log) {
+                if (resultBuffer.Count > 0 && resultBuffer[0].Type == DefaultCommandType.Log) {
                     Debug.Log(resultBuffer[0].Target);
                     _logger.WriteLog(resultBuffer[0].Target);
                 }
@@ -80,7 +86,7 @@ namespace ProcedureParsing {
 
         public bool WillBeCreated(CustomPath Path) {
             foreach (Command t in _commands) {
-                if (t.Type == CommandType.Create && t.SubTarget.Contains(Path.FullPath)) {
+                if (t.Type == DefaultCommandType.Create && t.SubTarget.Contains(Path.FullPath)) {
                     return true;
                 }
             }

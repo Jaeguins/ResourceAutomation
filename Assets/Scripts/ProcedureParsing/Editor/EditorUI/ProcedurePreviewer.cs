@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ProcedureParsing.Commands;
+using ProcedureParsing.Commands.Reactions;
 using UnityEditor;
 using UnityEngine;
 
@@ -113,7 +114,7 @@ namespace ProcedureParsing.EditorUI {
                     EditorGUI.indentLevel++;
                     foreach (Command command in Commands) {
                         GUIContent commandLabel=EditorGUIUtility.IconContent("d_curvekeyframeweighted");
-                        commandLabel.text = command.GenerateTooltipText();
+                        commandLabel.text = GenerateTooltipText(command);
                         EditorGUILayout.LabelField(commandLabel, ProcedurePreviewer.PreviewerStyle);
                     }
                 }
@@ -125,6 +126,38 @@ namespace ProcedureParsing.EditorUI {
         public override string ToString() {
             return Id;
         }
+
+        public string GenerateTooltipText(Command com) {
+            
+            string ret = string.Empty;
+
+            switch (com.Type) {
+                case DefaultCommandType.Log:
+                    ret += $"<color=red>{com.Target}</color>";
+                    break;
+                case DefaultCommandType.Create:
+                    ret += $"<color=green>{com.Target}</color>";
+                    break;
+                case DefaultCommandType.Move:
+                {
+                    CustomPath targetPath=new CustomPath(com.SubTarget);
+                    if (com.PastValue == MoveCommand.MoveTo) {
+                        ret += $"<color=#4080FF>{com.PastValue} {com.SubTarget}</color>";
+                    } else {
+                        ret+=$"<color=#4080FF>{com.PastValue} {com.Target}</color>";
+                    }
+                    
+                }
+                    break;
+                case DefaultCommandType.Set:
+                {
+                    CustomPath targetPath=new CustomPath(com.Target);
+                    ret += $"<color={(com.PastValue==Command.NaN?"green":"black")}>{targetPath.FromLast(0).Split('_').Last()} : {com.PastValue} -> {com.SubTarget}</color>";
+                }
+                    break;
+            }
+            return ret;
+        }
     }
 
     internal class FileTree : Tree<string, FileNode> {
@@ -135,14 +168,14 @@ namespace ProcedureParsing.EditorUI {
             string targetPath = new CustomPath(command.Target).FullPath,
                    subTargetPath = new CustomPath(command.SubTarget).FullPath;
             switch (command.Type) {
-                case CommandType.Log:
+                case DefaultCommandType.Log:
                     GetRootNode().Commands.Add(command);
                     break;
-                case CommandType.Create:
+                case DefaultCommandType.Create:
                     AddPath(subTargetPath);
                     GetNode(subTargetPath).Commands.Add(command);
                     break;
-                case CommandType.Move:
+                case DefaultCommandType.Move:
                 {
                     Command cpy = command;
                     cpy.PastValue = MoveCommand.MoveTo;
@@ -153,7 +186,7 @@ namespace ProcedureParsing.EditorUI {
                     GetNode(subTargetPath).Commands.Add(cpy);
                 }
                     break;
-                case CommandType.Set:
+                case DefaultCommandType.Set:
                     AddPath(targetPath);
                     GetNode(targetPath).Commands.Add(command);
                     break;
@@ -202,6 +235,8 @@ namespace ProcedureParsing.EditorUI {
             if (!this.AllNodes.ContainsKey(key)) return default;
             return this.AllNodes[key];
         }
+
+        
     }
 
     internal class Node<TKey> {
@@ -222,5 +257,7 @@ namespace ProcedureParsing.EditorUI {
             return this.Children.Contains(child);
         }
     }
+
+
 
 }

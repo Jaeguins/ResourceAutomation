@@ -28,16 +28,16 @@ namespace TestObjects.TestContainer {
             List<Command> ret = new List<Command>();
 
             CustomPath objPath = GetReferencePath(path);
-            ret.Add(new Command(CommandType.Create, nameof(TestScriptableObject), objPath.FullPath));
+            ret.Add(new Command(DefaultCommandType.Create, nameof(TestScriptableObject), objPath.FullPath));
             
-            ret.Add(new Command(CommandType.Set,objPath.GenerateLowerPath(IdIntValue).FullPath,IntValue.ToString()));
-            ret.Add(new Command(CommandType.Set,objPath.GenerateLowerPath(IdStringValue).FullPath,StringValue));
-            ret.Add(new Command(CommandType.Set,objPath.GenerateLowerPath(IdFloatValuesLength).FullPath,FloatValues.Count.ToString()));
+            ret.Add(new Command(DefaultCommandType.Set,objPath.GenerateLowerPath(IdIntValue).FullPath,IntValue.ToString()));
+            ret.Add(new Command(DefaultCommandType.Set,objPath.GenerateLowerPath(IdStringValue).FullPath,StringValue));
+            ret.Add(new Command(DefaultCommandType.Set,objPath.GenerateLowerPath(IdFloatValuesLength).FullPath,FloatValues.Count.ToString()));
             for(int i=0;i<FloatValues.Capacity;i++){
-                ret.Add(new Command(CommandType.Set,objPath.GenerateLowerPath($"{IdFloatValues}/{i}").FullPath,FloatValues[i].ToString()));
+                ret.Add(new Command(DefaultCommandType.Set,objPath.GenerateLowerPath($"{IdFloatValues}/{i}").FullPath,FloatValues[i].ToString()));
             }
             ret.AddRange(SubObject.GenerateCommand(path));
-            ret.Add(new Command(CommandType.Set,objPath.GenerateLowerPath(IdSubObject).FullPath,SubObject.GetReferencePath(path).FullPath));
+            ret.Add(new Command(DefaultCommandType.Set,objPath.GenerateLowerPath(IdSubObject).FullPath,SubObject.GetReferencePath(path).FullPath));
             return ret;
         }
     }

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEditor;
 
-namespace ProcedureParsing.Commands {
+namespace ProcedureParsing.Commands.Reactions {
 
     public class MoveCommand:ICommand{
         public const string MoveTo = "move to";
@@ -18,6 +18,7 @@ namespace ProcedureParsing.Commands {
         }
         public CommandProcess Reaction =>ReactionOfMove;
         public CommandProcess Validation => ValidateOfMove;
+        public int GetPriority => -1;
     }
 
 }

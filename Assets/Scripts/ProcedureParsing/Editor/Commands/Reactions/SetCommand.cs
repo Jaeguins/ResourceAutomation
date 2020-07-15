@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ProcedureParsing.Commands {
+namespace ProcedureParsing.Commands.Reactions {
 
     public class SetCommand:ICommand{
         private static IEnumerable<Command> ReactionOfSet(ProcedureParser context, string target, string subTarget) {
@@ -8,7 +8,7 @@ namespace ProcedureParsing.Commands {
             CustomPath path = new CustomPath(target);
             IProcedureParsable tempTarget = CustomPath.FindAssetWithPath(path);
             if (tempTarget == null) {
-                ret.Add(new Command(CommandType.Log, "CannotFoundTarget", $"Set {target} into {subTarget}"));
+                ret.Add(new Command(DefaultCommandType.Log, "CannotFoundTarget", $"Set {target} into {subTarget}"));
                 return ret;
             }
 
@@ -22,7 +22,7 @@ namespace ProcedureParsing.Commands {
 
         private static IEnumerable<Command> ValidateOfSet(ProcedureParser context, string target, string subTarget) {
             List<Command> ret = new List<Command>();
-            ret.Add(new Command(CommandType.Set, target, subTarget));
+            ret.Add(new Command(DefaultCommandType.Set, target, subTarget));
             CustomPath path = new CustomPath(target);
             IProcedureParsable tempTarget = CustomPath.FindAssetWithPath(path);
             if (tempTarget == null) {
@@ -33,7 +33,7 @@ namespace ProcedureParsing.Commands {
                     return ret;
                 }
                 ret.Clear();
-                ret.Add(new Command(CommandType.Log, "CannotFoundTarget", $"Set {target} into {subTarget}"));
+                ret.Add(new Command(DefaultCommandType.Log, "CannotFoundTarget", $"Set {target} into {subTarget}"));
                 return ret;
             }
             if (path.FromLast(1).StartsWith(CustomPath.RefPrefix)) {
@@ -59,6 +59,7 @@ namespace ProcedureParsing.Commands {
         }
         public CommandProcess Reaction => ReactionOfSet;
         public CommandProcess Validation => ValidateOfSet;
+        public int GetPriority => 2;
     }
 
 }

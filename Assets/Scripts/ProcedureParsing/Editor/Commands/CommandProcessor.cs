@@ -1,33 +1,15 @@
 ﻿using System;
 using System.ComponentModel;
-using static System.String;
 
 namespace ProcedureParsing.Commands {
 
-    public static partial class CommandProcessor {
+    public static class CommandProcessor {
+        private static ICommand[] _commands = {null, new CreateCommand(), new MoveCommand(), null, new SetCommand()};
         public static CommandProcess GetReaction(CommandType type) {
-            switch (type) {
-                case CommandType.Create:
-                    return ReactionOfCreate;
-                case CommandType.Move:
-                    return ReactionOfMove;
-                case CommandType.Set:
-                    return ReactionOfSet;
-                default:
-                    throw new InvalidEnumArgumentException(nameof(type), (int) type, typeof(CommandType));
-            }
+            return _commands[(int) type].Reaction;
         }
         public static CommandProcess GetValidation(CommandType type) {
-            switch (type) {
-                case CommandType.Create:
-                    return ValidateOfCreate;
-                case CommandType.Move:
-                    return ValidateOfMove;
-                case CommandType.Set:
-                    return ValidateOfSet;
-                default:
-                    throw new InvalidEnumArgumentException(nameof(type), (int) type, typeof(CommandType));
-            }
+            return _commands[(int) type].Validation;
         }
 
         public static int GetPriority(CommandType type) {
@@ -50,10 +32,10 @@ namespace ProcedureParsing.Commands {
             if (diff != 0) return diff;
             diff = x.Priority - y.Priority;
             if (diff != 0) return diff;
-            diff = Compare(x.Target, y.Target, StringComparison.Ordinal);
+            diff = string.Compare(x.Target, y.Target, StringComparison.Ordinal);
             if (diff != 0) return diff;
 
-            return Compare(x.SubTarget, y.SubTarget, StringComparison.Ordinal);
+            return string.Compare(x.SubTarget, y.SubTarget, StringComparison.Ordinal);
 
             
 

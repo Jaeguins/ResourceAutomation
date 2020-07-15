@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
-using TestObjects.TestObjects;
 using UnityEditor;
 using UnityEngine;
 using static System.String;
 
 namespace ProcedureParsing.Commands {
 
-    public static partial class CommandProcessor {
-        private static IEnumerable<Command> ReactionOfCreate(ProcedureParser context, string target, string subTarget) {
+    public class CreateCommand:ICommand {
+        private IEnumerable<Command> ReactionOfCreate(ProcedureParser context, string target, string subTarget) {
             List<Command> ret = new List<Command>();
             IProcedureParsable targetAsset = CreateNewObject(target);
             CustomPath targetPath = new CustomPath(subTarget);
@@ -46,7 +45,7 @@ namespace ProcedureParsing.Commands {
             return null;
         }
 
-        private static IEnumerable<Command> ValidateOfCreate(ProcedureParser context, string target, string subTarget) {
+        private IEnumerable<Command> ValidateOfCreate(ProcedureParser context, string target, string subTarget) {
             List<Command> ret = new List<Command>();
             CustomPath path = new CustomPath(subTarget);
             IProcedureParsable tempTarget = CustomPath.FindAssetWithPath(path);
@@ -68,24 +67,27 @@ namespace ProcedureParsing.Commands {
                 }
             }
         }
-        private static IProcedureParsable CreateNewObject(string type) {
+        public virtual IProcedureParsable CreateNewObject(string type) {
             IProcedureParsable ret = null;
             switch (type) {
-                case nameof(TestComponent):
-                    ret = new GameObject().AddComponent<TestComponent>();
-                    break;
-                case nameof(TestSubComponent):
-                    ret = new GameObject().AddComponent<TestSubComponent>();
-                    break;
-                case nameof(TestScriptableObject):
-                    ret = ScriptableObject.CreateInstance<TestScriptableObject>();
-                    break;
-                case nameof(TestSubScriptableObject):
-                    ret = ScriptableObject.CreateInstance<TestSubScriptableObject>();
-                    break;
+                // case nameof(TestComponent):
+                //     ret = new GameObject().AddComponent<TestComponent>();
+                //     break;
+                // case nameof(TestSubComponent):
+                //     ret = new GameObject().AddComponent<TestSubComponent>();
+                //     break;
+                // case nameof(TestScriptableObject):
+                //     ret = ScriptableObject.CreateInstance<TestScriptableObject>();
+                //     break;
+                // case nameof(TestSubScriptableObject):
+                //     ret = ScriptableObject.CreateInstance<TestSubScriptableObject>();
+                //     break;
+                //TODO
             }
             return ret;
         }
+        public CommandProcess Reaction => ReactionOfCreate;
+        public CommandProcess Validation => ValidateOfCreate;
     }
 
 }

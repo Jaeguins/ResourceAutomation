@@ -32,7 +32,7 @@ namespace ProcedureParsing.Commands {
                 case CommandType.Move:
                 {
                     CustomPath targetPath=new CustomPath(SubTarget);
-                    if (PastValue == CommandProcessor.MoveTo) {
+                    if (PastValue == MoveCommand.MoveTo) {
                         ret += $"<color=#4080FF>{PastValue} {SubTarget}</color>";
                     } else {
                             ret+=$"<color=#4080FF>{PastValue} {Target}</color>";

@@ -2,7 +2,7 @@
 
 namespace ProcedureParsing.Commands {
 
-    public static partial class CommandProcessor {
+    public class SetCommand:ICommand{
         private static IEnumerable<Command> ReactionOfSet(ProcedureParser context, string target, string subTarget) {
             List<Command> ret = new List<Command>();
             CustomPath path = new CustomPath(target);
@@ -57,6 +57,8 @@ namespace ProcedureParsing.Commands {
             }
             return ret;
         }
+        public CommandProcess Reaction => ReactionOfSet;
+        public CommandProcess Validation => ValidateOfSet;
     }
 
 }

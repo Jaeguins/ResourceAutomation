@@ -145,10 +145,10 @@ namespace ProcedureParsing.EditorUI {
                 case CommandType.Move:
                 {
                     Command cpy = command;
-                    cpy.PastValue = CommandProcessor.MoveTo;
+                    cpy.PastValue = MoveCommand.MoveTo;
                     AddPath(targetPath);
                     GetNode(targetPath).Commands.Add(cpy);
-                    cpy.PastValue = CommandProcessor.MoveFrom;
+                    cpy.PastValue = MoveCommand.MoveFrom;
                     AddPath(subTargetPath);
                     GetNode(subTargetPath).Commands.Add(cpy);
                 }

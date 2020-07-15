@@ -8,11 +8,13 @@ using UnityEngine;
 namespace TestObjects.TestObjects {
 
     [CreateAssetMenu(fileName = "TestScriptableObject1", menuName = "Test/TestScriptableObject")]
-    public class TestScriptableObject : ScriptableObject, IProcedureParsable {
+    public partial class TestScriptableObject : ScriptableObject{
         public int IntValue;
         public string StringValue;
         public List<float> FloatValues;
         public TestSubScriptableObject SubObject;
+    }
+    public partial class TestScriptableObject:IProcedureParsable{
 
         public void Set(string location, string value) {
             string[] parsed = location.Split('/');

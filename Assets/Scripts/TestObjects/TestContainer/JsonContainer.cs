@@ -6,7 +6,7 @@ using TestObjects.TestContainer;
 namespace ProcedureParsing.Containers {
 
     [Serializable]
-    public class JsonContainer : ContainerFactory { //Root Json Parsed Target
+    public class JsonContainer : JsonParsed { //Root Json Parsed Target
         private const string _basePath = "Assets/Resources/TestContainerDirectory";
 
         public List<TestScriptableObjectContainer> TestScriptableObjects;

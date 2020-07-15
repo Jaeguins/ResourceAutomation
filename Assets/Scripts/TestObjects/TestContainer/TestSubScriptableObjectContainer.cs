@@ -8,7 +8,7 @@ using TestObjects.TestObjects;
 namespace TestObjects.TestContainer {
 
     [Serializable]
-    public class TestSubScriptableObjectContainer : ContainerFactory {
+    public class TestSubScriptableObjectContainer : JsonParsed {
         public const string IdStrValue = "r_StrValue";
         public string Name,
                       StrValue;

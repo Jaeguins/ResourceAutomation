@@ -24,7 +24,7 @@ namespace ProcedureParsing {
         }
         private void Parse(string json) {
             _commands = new List<Command>();
-            JsonContainer container = JsonUtility.FromJson<JsonContainer>(json);
+            JsonParsed container = JsonUtility.FromJson<JsonParsed>(json);
             _commands.AddRange(container.GenerateCommand(null));
             Sort();
         }
